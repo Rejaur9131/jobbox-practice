@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from "react";
-import loginImage from "../assets/login.svg";
-import { useForm, useWatch } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import loginImage from '../assets/login.svg';
+import { useForm, useWatch } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { createUser } from '../features/auth/authSlice';
 const Signup = () => {
   const { handleSubmit, register, reset, control } = useForm();
-  const password = useWatch({ control, name: "password" });
-  const confirmPassword = useWatch({ control, name: "confirmPassword" });
+  const password = useWatch({ control, name: 'password' });
+  const confirmPassword = useWatch({ control, name: 'confirmPassword' });
   const navigate = useNavigate();
   const [disabled, setDisabled] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (
       password !== undefined &&
-      password !== "" &&
+      password !== '' &&
       confirmPassword !== undefined &&
-      confirmPassword !== "" &&
+      confirmPassword !== '' &&
       password === confirmPassword
     ) {
       setDisabled(false);
@@ -23,8 +26,9 @@ const Signup = () => {
     }
   }, [password, confirmPassword]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = ({ email, password }) => {
+    // console.log(data);
+    dispatch(createUser({ email, password }));
   };
 
   return (
@@ -45,7 +49,7 @@ const Signup = () => {
                   type='email'
                   name='email'
                   id='email'
-                  {...register("email")}
+                  {...register('email')}
                 />
               </div>
 
@@ -57,7 +61,7 @@ const Signup = () => {
                   type='password'
                   name='password'
                   id='password'
-                  {...register("password")}
+                  {...register('password')}
                 />
               </div>
               <div className='flex flex-col items-start'>
@@ -67,7 +71,7 @@ const Signup = () => {
                 <input
                   type='password'
                   id='confirm-password'
-                  {...register("confirmPassword")}
+                  {...register('confirmPassword')}
                 />
               </div>
               <div className='!mt-8 '>
@@ -81,10 +85,10 @@ const Signup = () => {
               </div>
               <div>
                 <p>
-                  Already have an account?{" "}
+                  Already have an account?{' '}
                   <span
                     className='text-primary hover:underline cursor-pointer'
-                    onClick={() => navigate("/login")}
+                    onClick={() => navigate('/login')}
                   >
                     Login
                   </span>

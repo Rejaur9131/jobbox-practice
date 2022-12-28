@@ -1,15 +1,30 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from "react-router-dom";
-import loginImage from "../assets/login.svg";
+import { useNavigate } from 'react-router-dom';
+import loginImage from '../assets/login.svg';
+import { goolgeLogin, loginUser } from '../features/auth/authSlice';
 const Login = () => {
+  const { isLoading, email } = useSelector((state) => state.auth);
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = ({ email, password }) => {
+    // console.log(data);
+    dispatch(loginUser({ email, password }));
   };
+
+  const handleGoogleLogin = () => {
+    dispatch(goolgeLogin());
+  };
+
+  useEffect(() => {
+    if (!isLoading && email) {
+      navigate('/');
+    }
+  }, [email, isLoading, navigate]);
 
   return (
     <div className='flex h-screen items-center'>
@@ -25,7 +40,7 @@ const Login = () => {
                 <label htmlFor='email' className='ml-5'>
                   Email
                 </label>
-                <input type='email' {...register("email")} id='email' />
+                <input type='email' {...register('email')} id='email' />
               </div>
               <div className='flex flex-col items-start'>
                 <label htmlFor='password' className='ml-5'>
@@ -34,7 +49,7 @@ const Login = () => {
                 <input
                   type='password'
                   id='password'
-                  {...register("password")}
+                  {...register('password')}
                 />
               </div>
               <div className='relative !mt-8'>
@@ -47,15 +62,22 @@ const Login = () => {
               </div>
               <div>
                 <p>
-                  Don't have an account?{" "}
+                  Don't have an account?{' '}
                   <span
                     className='text-primary hover:underline cursor-pointer'
-                    onClick={() => navigate("/signup")}
+                    onClick={() => navigate('/signup')}
                   >
                     Sign up
                   </span>
                 </p>
               </div>
+              <button
+                onClick={handleGoogleLogin}
+                type='button'
+                className='font-bold text-white py-3 rounded-full bg-primary w-full'
+              >
+                Login with Google
+              </button>
             </div>
           </form>
         </div>
